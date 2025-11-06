@@ -1,0 +1,25 @@
+services:
+  database:
+    image: mariadb:11
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: AutoShopRootAdminLQS!
+      MYSQL_DATABASE: otochope
+      MYSQL_USER: otochopego
+      MYSQL_PASSWORD: gotochope
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOST: database
+      PMA_USER: otochopego
+      PMA_PASSWORD: gotochope
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
