@@ -18,6 +18,10 @@ func InitItemsRoutes(r *gin.Engine) {
 		items, err := helpers.GetAllItems()
 		ReturnDataOrError(c, items, err)
 	})
+	itemsGroup.GET("/statistics", func(c *gin.Context) {
+		stats, err := helpers.GetItemsStatistics()
+		ReturnDataOrError(c, stats, err)
+	})
 
 	/* Single Item Group */
 

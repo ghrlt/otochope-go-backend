@@ -18,6 +18,10 @@ func InitUsersRoutes(r *gin.Engine) {
 		users, err := helpers.GetAllUsers()
 		ReturnDataOrError(c, users, err)
 	})
+	usersGroup.GET("/statistics", func(c *gin.Context) {
+		stats, err := helpers.GetUsersStatistics()
+		ReturnDataOrError(c, stats, err)
+	})
 
 	/* User Group */
 

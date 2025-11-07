@@ -7,6 +7,39 @@ import (
 	"github.com/google/uuid"
 )
 
+type TransactionStats struct {
+	TotalTransactions                  int
+	TotalCompletedTransactions         int
+	TotalAmountInEURCents              int64
+	AverageTransactionAmountInEURCents int64
+}
+
+func GetTransactionsStatistics() (*TransactionStats, error) {
+	query := `
+		SELECT
+			COUNT(*) AS total,
+			SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed,
+			SUM(amount_in_eur_cents) AS total_amount,
+			AVG(amount_in_eur_cents) AS average_amount
+		FROM transactions;
+	`
+
+	rows, err := database.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var stats TransactionStats
+	if rows.Next() {
+		if err := rows.Scan(&stats.TotalTransactions, &stats.TotalCompletedTransactions, &stats.TotalAmountInEURCents, &stats.AverageTransactionAmountInEURCents); err != nil {
+			return nil, err
+		}
+	}
+
+	return &stats, nil
+}
+
 func GetAllTransactions() ([]Transaction, error) {
 	query := "SELECT * FROM transactions"
 	rows, err := database.Query(query)

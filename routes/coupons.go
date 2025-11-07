@@ -18,6 +18,10 @@ func InitCouponsRoutes(r *gin.Engine) {
 		coupons, err := helpers.GetAllCoupons()
 		ReturnDataOrError(c, coupons, err)
 	})
+	couponsGroup.GET("/statistics", func(c *gin.Context) {
+		stats, err := helpers.GetCouponsStatistics()
+		ReturnDataOrError(c, stats, err)
+	})
 
 	couponGroup := couponsGroup.Group("/:uid", func(c *gin.Context) {
 		uidStr := c.Param("uid")

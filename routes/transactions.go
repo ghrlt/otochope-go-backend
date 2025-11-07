@@ -14,6 +14,10 @@ func InitTransactionsRoutes(r *gin.Engine) {
 		transactions, err := helpers.GetAllTransactions()
 		ReturnDataOrError(c, transactions, err)
 	})
+	transactionsGroup.GET("/statistics", func(c *gin.Context) {
+		stats, err := helpers.GetTransactionsStatistics()
+		ReturnDataOrError(c, stats, err)
+	})
 	transactionsGroup.GET("/status/:status", func(c *gin.Context) {
 		status := c.Param("status")
 		transactions, err := helpers.GetAllTransactionsByStatus(status)
