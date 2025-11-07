@@ -19,6 +19,7 @@ func Init(r *gin.Engine) {
 	InitCartsRoutes(r)
 	InitCouponsRoutes(r)
 	InitItemsRoutes(r)
+	InitItemCategoriesRoutes(r)
 }
 
 func ReturnDataOrError(c *gin.Context, data any, err error) {

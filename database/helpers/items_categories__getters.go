@@ -7,7 +7,7 @@ import (
 )
 
 func GetAllItemCategories() ([]ItemCategory, error) {
-	query := "SELECT * FROM items_categories"
+	query := "SELECT * FROM item_categories"
 	rows, err := database.Query(query)
 	if err != nil {
 		return nil, err
@@ -18,7 +18,7 @@ func GetAllItemCategories() ([]ItemCategory, error) {
 }
 
 func GetActiveItemCategories() ([]ItemCategory, error) {
-	query := "SELECT * FROM items_categories WHERE active = 1"
+	query := "SELECT * FROM item_categories WHERE active = 1"
 	rows, err := database.Query(query)
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func GetActiveItemCategories() ([]ItemCategory, error) {
 }
 
 func GetAllItemCategoriesByParentUID(parentUID uuid.UUID) ([]ItemCategory, error) {
-	query := "SELECT * FROM items_categories WHERE parent_item_category_uid = ?"
+	query := "SELECT * FROM item_categories WHERE parent_item_category_uid = ?"
 	rows, err := database.Query(query, parentUID)
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func GetAllItemCategoriesByParentUID(parentUID uuid.UUID) ([]ItemCategory, error
 }
 
 func GetActiveItemCategoriesByParentUID(parentUID uuid.UUID) ([]ItemCategory, error) {
-	query := "SELECT * FROM items_categories WHERE parent_item_category_uid = ? AND active = 1"
+	query := "SELECT * FROM item_categories WHERE parent_item_category_uid = ? AND active = 1"
 	rows, err := database.Query(query, parentUID)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func GetActiveItemCategoriesByParentUID(parentUID uuid.UUID) ([]ItemCategory, er
 }
 
 func GetItemCategoryByUID(uid uuid.UUID) (*ItemCategory, error) {
-	query := "SELECT * FROM items_categories WHERE uid = ?"
+	query := "SELECT * FROM item_categories WHERE uid = ?"
 	rows, err := database.Query(query, uid)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func GetItemCategoryByUID(uid uuid.UUID) (*ItemCategory, error) {
 }
 
 func GetActiveItemCategoryByUID(uid uuid.UUID) (*ItemCategory, error) {
-	query := "SELECT * FROM items_categories WHERE uid = ? AND active = 1"
+	query := "SELECT * FROM item_categories WHERE uid = ? AND active = 1"
 	rows, err := database.Query(query, uid)
 	if err != nil {
 		return nil, err
