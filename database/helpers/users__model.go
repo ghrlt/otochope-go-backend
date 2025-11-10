@@ -10,6 +10,7 @@ import (
 type User struct {
 	UID        uuid.UUID
 	TelegramID int64
+	Username   string
 	CreatedAt  time.Time
 	Active     bool
 }
@@ -38,7 +39,7 @@ func parseUsersRows(rows *sql.Rows) ([]User, error) {
 	var users []User
 	for rows.Next() {
 		var user User
-		if err := rows.Scan(&user.UID, &user.TelegramID, &user.CreatedAt, &user.Active); err != nil {
+		if err := rows.Scan(&user.UID, &user.TelegramID, &user.Username, &user.CreatedAt, &user.Active); err != nil {
 			return nil, err
 		}
 		users = append(users, user)
@@ -51,7 +52,7 @@ func parseUserRow(rows *sql.Rows) (*User, error) {
 	if !rows.Next() {
 		return nil, nil // No user found
 	}
-	if err := rows.Scan(&user.UID, &user.TelegramID, &user.CreatedAt, &user.Active); err != nil {
+	if err := rows.Scan(&user.UID, &user.TelegramID, &user.Username, &user.CreatedAt, &user.Active); err != nil {
 		return nil, err
 	}
 	return &user, nil
