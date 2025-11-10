@@ -29,7 +29,7 @@ func ReturnDataOrError(c *gin.Context, data any, err error) {
 	}
 
 	if utilities.IsNilOrEmpty(data) {
-		c.JSON(204, gin.H{"message": "No data found"})
+		c.Status(204) //, gin.H{"message": "No data found"})
 		return
 	}
 
