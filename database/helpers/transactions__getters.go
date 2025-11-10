@@ -11,7 +11,7 @@ type TransactionStats struct {
 	TotalTransactions                  int
 	TotalCompletedTransactions         int
 	TotalAmountInEURCents              int64
-	AverageTransactionAmountInEURCents int64
+	AverageTransactionAmountInEURCents float64
 }
 
 func GetTransactionsStatistics() (*TransactionStats, error) {
