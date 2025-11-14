@@ -18,6 +18,53 @@ func InitUsersRoutes(r *gin.Engine) {
 		users, err := helpers.GetAllUsers()
 		ReturnDataOrError(c, users, err)
 	})
+	usersGroup.POST("/search", func(c *gin.Context) {
+		type SearchParams struct {
+			UID        *string `json:"uid"`
+			Username   *string `json:"username"`
+			Identifier *string `json:"identifier"`
+		}
+		var searchParams SearchParams
+		if err := c.ShouldBindJSON(&searchParams); err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		if searchParams.UID == nil && searchParams.Username == nil && searchParams.Identifier == nil {
+			c.JSON(400, gin.H{"error": "At least one search parameter must be provided"})
+			return
+		}
+		if searchParams.UID != nil && (searchParams.Username != nil || searchParams.Identifier != nil) {
+			c.JSON(400, gin.H{"error": "When searching by UID, no other parameters should be provided"})
+			return
+		}
+
+		var users []helpers.User
+		var err error
+		switch {
+		case searchParams.UID != nil:
+			uid, parseErr := uuid.Parse(*searchParams.UID)
+			if parseErr != nil {
+				c.JSON(400, gin.H{"error": "Invalid UUID format"})
+				return
+			}
+			var user *helpers.User
+			user, err = helpers.GetUserByUID(uid)
+			if user != nil {
+				users = []helpers.User{*user}
+			}
+
+		case searchParams.Username != nil && searchParams.Identifier != nil:
+			users, err = helpers.FindUsersByUsernameAndIdentifier(*searchParams.Username, *searchParams.Identifier)
+
+		case searchParams.Username != nil:
+			users, err = helpers.FindUsersByUsername(*searchParams.Username)
+
+		case searchParams.Identifier != nil:
+			users, err = helpers.FindUsersByIdentifier(*searchParams.Identifier)
+		}
+		ReturnDataOrError(c, users, err)
+	})
 	usersGroup.GET("/statistics", func(c *gin.Context) {
 		stats, err := helpers.GetUsersStatistics()
 		ReturnDataOrError(c, stats, err)
@@ -30,7 +77,6 @@ func InitUsersRoutes(r *gin.Engine) {
 		uid, err := uuid.Parse(uidStr)
 		if err != nil {
 			c.JSON(400, gin.H{"error": "Invalid UUID"})
-			c.Abort()
 			return
 		}
 		c.Set("user_uid", uid)
