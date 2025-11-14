@@ -59,6 +59,39 @@ func GetAllUsers() ([]User, error) {
 	return parseUsersRows(rows)
 }
 
+func FindUsersByUsername(username string) ([]User, error) {
+	query := "SELECT * FROM users WHERE username LIKE ?"
+	rows, err := database.Query(query, username+"%")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return parseUsersRows(rows)
+}
+
+func FindUsersByIdentifier(identifier string) ([]User, error) {
+	query := "SELECT * FROM users WHERE identifier LIKE ?"
+	rows, err := database.Query(query, identifier+"%")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return parseUsersRows(rows)
+}
+
+func FindUsersByUsernameAndIdentifier(username, identifier string) ([]User, error) {
+	query := "SELECT * FROM users WHERE username LIKE ? AND identifier LIKE ?"
+	rows, err := database.Query(query, username+"%", identifier+"%")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return parseUsersRows(rows)
+}
+
 func GetUserByUID(uid uuid.UUID) (*User, error) {
 	query := "SELECT * FROM users WHERE uid = ? LIMIT 1"
 	rows, err := database.Query(query, uid)
